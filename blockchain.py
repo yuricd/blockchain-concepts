@@ -4,13 +4,13 @@ import time
 
 class Blockchain:
     def __init__(self):
-        self.chain = [Block(index=0, transactions=[],
-                            timestamp=time.time(), previous_hash=0)]
+        self._chain = [Block(index=0, transactions=[],
+                             timestamp=time.time(), previous_hash=0)]
         self.unconfirmed_txs = []
 
     @property
     def last_block(self):
-        return self.chain[-1]
+        return self._chain[-1]
 
     def pow(self, block, difficulty=3):
         proof_hash = block.hash()
@@ -28,7 +28,7 @@ class Blockchain:
         if not self.is_valid_proof(block, proof_hash):
             return False
 
-        self.chain.append(block)
+        self._chain.append(block)
         return True
 
     def is_valid_proof(self, block, proof_hash, difficulty=3):

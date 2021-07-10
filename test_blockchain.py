@@ -22,7 +22,7 @@ class TestBlockchain(unittest.TestCase):
     def test_last_block_with_one_more_block(self):
         blockchain = Blockchain()
         block = deepcopy(sample_block)
-        block.previous_hash = blockchain.chain[0].hash()
+        block.previous_hash = blockchain.last_block.hash()
 
         blockchain.add_block(block=block, proof_hash=blockchain.pow(block))
 
@@ -72,11 +72,11 @@ class TestBlockchain(unittest.TestCase):
     def test_add_block(self):
         blockchain = Blockchain()
         block = deepcopy(sample_block)
-        block.previous_hash = blockchain.chain[0].hash()
+        block.previous_hash = blockchain.last_block.hash()
 
         proof_hash = blockchain.pow(block)
 
-        self.assertEqual(len(blockchain.chain), 1,
+        self.assertEqual(blockchain.last_block.index, 0,
                          'Should return only genesis block before adding second block')
 
         was_added = blockchain.add_block(block, proof_hash)
@@ -84,13 +84,13 @@ class TestBlockchain(unittest.TestCase):
         self.assertEqual(
             was_added, True, 'Should return true when add a valid block')
 
-        self.assertEqual(len(blockchain.chain), 2,
+        self.assertEqual(blockchain.last_block.index, 1,
                          'Should return only genesis block before adding second block')
 
     def test_mine_with_unconfirmed_txs(self):
         blockchain = Blockchain()
         block = deepcopy(sample_block)
-        block.previous_hash = blockchain.chain[0].hash()
+        block.previous_hash = blockchain.last_block.hash()
 
         unconf_tx = blockchain.build_transaction(
             'SenderAddress', 'ReceiverAddress', 10)
@@ -102,7 +102,7 @@ class TestBlockchain(unittest.TestCase):
     def test_mine_with_no_unconfirmed_txs(self):
         blockchain = Blockchain()
         block = deepcopy(sample_block)
-        block.previous_hash = blockchain.chain[0].hash()
+        block.previous_hash = blockchain.last_block.hash()
 
         next_idx = blockchain.mine()
         self.assertEqual(
