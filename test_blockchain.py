@@ -9,8 +9,8 @@ index = 1
 transactions = ['a', 'b']
 timestamp = 'ts'
 previous_hash = 'b'
-nonce = 100
-sample_block = Block(index, transactions, timestamp, previous_hash, nonce)
+proof = 100
+sample_block = Block(index, transactions, timestamp, previous_hash, proof)
 
 
 class TestBlockchain(unittest.TestCase):
