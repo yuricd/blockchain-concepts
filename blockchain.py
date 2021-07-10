@@ -55,5 +55,5 @@ class Blockchain:
         return new_block.index
 
     def print(self):
-        for block in self.chain:
+        for block in self._chain:
             block.print()
