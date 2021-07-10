@@ -11,6 +11,8 @@ previous_hash = 0
 proof = 100
 sample_block = Block(index, transactions, timestamp, previous_hash, proof)
 
+DIFFICULTY = 3
+
 
 class TestBlockchain(unittest.TestCase):
 
@@ -34,7 +36,7 @@ class TestBlockchain(unittest.TestCase):
         block = deepcopy(sample_block)
         proof_hash = blockchain.pow(block)
 
-        self.assertEqual(blockchain.is_valid_proof(block, proof_hash), True,
+        self.assertEqual(blockchain.is_valid_proof(block, proof_hash, DIFFICULTY), True,
                          'Should apply PoW algorithm successfully')
 
     def test_pow_failure(self):
@@ -42,7 +44,7 @@ class TestBlockchain(unittest.TestCase):
         block = deepcopy(sample_block)
         proof_hash = blockchain.pow(block)
         block.proof += 1
-        self.assertEqual(blockchain.is_valid_proof(block, proof_hash), False,
+        self.assertEqual(blockchain.is_valid_proof(block, proof_hash, DIFFICULTY), False,
                          'Should apply PoW algorithm and failed due to wrong proof counter')
 
     def test_is_valid_proof(self):
@@ -51,7 +53,8 @@ class TestBlockchain(unittest.TestCase):
 
         proof_hash = blockchain.pow(block)
 
-        valid = blockchain.is_valid_proof(block, proof_hash, difficulty=3)
+        valid = blockchain.is_valid_proof(
+            block, proof_hash, difficulty=DIFFICULTY)
 
         self.assertEqual(valid, True,
                          'Should be valid')
