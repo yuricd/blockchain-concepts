@@ -42,9 +42,9 @@ class Blockchain:
 
     def mine(self):
         if not self.unconfirmed_txs:
-            return False
+            return -1
 
-        new_block = Block(index=self.index_1,
+        new_block = Block(index=self.last_block.index+1,
                           transactions=self.unconfirmed_txs,
                           timestamp=time.time(),
                           previous_hash=self.last_block.hash())

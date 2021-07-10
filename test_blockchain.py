@@ -14,8 +14,20 @@ sample_block = Block(index, transactions, timestamp, previous_hash, proof)
 
 class TestBlockchain(unittest.TestCase):
 
-    def last_block(self):
-        pass
+    def test_last_block_with_only_genesis(self):
+        blockchain = Blockchain()
+        self.assertEqual(blockchain.last_block.index, 0,
+                         'Should retrieve genesis block successfully')
+
+    def test_last_block_with_one_more_block(self):
+        blockchain = Blockchain()
+        block = deepcopy(sample_block)
+        block.previous_hash = blockchain.chain[0].hash()
+
+        blockchain.add_block(block=block, proof_hash=blockchain.pow(block))
+
+        self.assertEqual(blockchain.last_block.index, 1,
+                         'Should retrieve last block successfully')
 
     def test_pow_success(self):
         blockchain = Blockchain()
@@ -37,7 +49,6 @@ class TestBlockchain(unittest.TestCase):
         blockchain = Blockchain()
         block = deepcopy(sample_block)
 
-        # proof for difficulty 3 in sample block
         proof_hash = blockchain.pow(block)
 
         valid = blockchain.is_valid_proof(block, proof_hash, difficulty=3)
@@ -76,23 +87,26 @@ class TestBlockchain(unittest.TestCase):
         self.assertEqual(len(blockchain.chain), 2,
                          'Should return only genesis block before adding second block')
 
-    def test_mine(self):
+    def test_mine_with_unconfirmed_txs(self):
         blockchain = Blockchain()
         block = deepcopy(sample_block)
         block.previous_hash = blockchain.chain[0].hash()
 
-        proof_hash = blockchain.pow(block)
+        unconf_tx = blockchain.build_transaction(
+            'SenderAddress', 'ReceiverAddress', 10)
 
-        self.assertEqual(len(blockchain.chain), 1,
-                         'Should return only genesis block before adding second block')
+        blockchain.unconfirmed_txs.append(unconf_tx)
+        next_idx = blockchain.mine()
+        self.assertEqual(next_idx, 1, 'Should return the next index in chain')
 
-        was_added = blockchain.add_block(block, proof_hash)
+    def test_mine_with_no_unconfirmed_txs(self):
+        blockchain = Blockchain()
+        block = deepcopy(sample_block)
+        block.previous_hash = blockchain.chain[0].hash()
 
+        next_idx = blockchain.mine()
         self.assertEqual(
-            was_added, True, 'Should return true when add a valid block')
-
-        self.assertEqual(len(blockchain.chain), 2,
-                         'Should return only genesis block before adding second block')
+            next_idx, -1, "Should return -1 when there's no pending transaction")
 
 
 if __name__ == '__main__':
