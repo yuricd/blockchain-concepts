@@ -4,8 +4,8 @@ import time
 
 class Blockchain:
     def __init__(self):
-        self._chain = [Block(index=0, transactions=[],
-                             timestamp=time.time(), previous_hash=0)]
+        self._chain = [Block(index=0, timestamp=time.time(), transactions=[],
+                             previous_hash=0)]
         self.unconfirmed_txs = []
 
     @property
@@ -45,8 +45,8 @@ class Blockchain:
             return -1
 
         new_block = Block(index=self.last_block.index+1,
-                          transactions=self.unconfirmed_txs,
                           timestamp=time.time(),
+                          transactions=self.unconfirmed_txs,
                           previous_hash=self.last_block.hash())
 
         proof_hash = self.pow(new_block)

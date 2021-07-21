@@ -7,7 +7,7 @@ transactions = ['a', 'b']
 timestamp = 'ts'
 previous_hash = 'b'
 nonce = 100
-new_block = Block(index, transactions, timestamp, previous_hash, nonce)
+new_block = Block(index, timestamp, transactions, previous_hash, nonce)
 
 
 class TestBlock(unittest.TestCase):

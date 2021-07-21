@@ -3,10 +3,10 @@ from hashlib import sha256
 
 
 class Block:
-    def __init__(self, index='', transactions=[], timestamp='', previous_hash='', nonce=0):
+    def __init__(self, index='', timestamp='', transactions=[], previous_hash='', nonce=0):
         self.index = index
-        self.transactions = transactions
         self.timestamp = timestamp
+        self.transactions = transactions
         self.previous_hash = previous_hash
         self.nonce = nonce
 
