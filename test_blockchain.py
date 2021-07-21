@@ -8,8 +8,8 @@ index = 1
 transactions = ['a', 'b']
 timestamp = 'ts'
 previous_hash = 0
-proof = 100
-sample_block = Block(index, transactions, timestamp, previous_hash, proof)
+nonce = 100
+sample_block = Block(index, transactions, timestamp, previous_hash, nonce)
 
 DIFFICULTY = 3
 
@@ -43,9 +43,9 @@ class TestBlockchain(unittest.TestCase):
         blockchain = Blockchain()
         block = deepcopy(sample_block)
         proof_hash = blockchain.pow(block)
-        block.proof += 1
+        block.nonce += 1
         self.assertEqual(blockchain.is_valid_proof(block, proof_hash, DIFFICULTY), False,
-                         'Should apply PoW algorithm and failed due to wrong proof counter')
+                         'Should apply PoW algorithm and failed due to wrong nonce counter')
 
     def test_is_valid_proof(self):
         blockchain = Blockchain()

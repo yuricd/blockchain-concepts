@@ -6,14 +6,14 @@ index = 1
 transactions = ['a', 'b']
 timestamp = 'ts'
 previous_hash = 'b'
-proof = 100
-new_block = Block(index, transactions, timestamp, previous_hash, proof)
+nonce = 100
+new_block = Block(index, transactions, timestamp, previous_hash, nonce)
 
 
 class TestBlock(unittest.TestCase):
     def test_build_payload(self):
         payload = new_block.build_payload()
-        expected = dumps(dict(index=index, proof=proof, previous_hash=previous_hash,
+        expected = dumps(dict(index=index, nonce=nonce, previous_hash=previous_hash,
                          timestamp=timestamp, transactions=transactions), sort_keys=True)
         self.assertEqual(payload, expected, 'Should match dicts')
 

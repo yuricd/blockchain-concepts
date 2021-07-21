@@ -15,7 +15,7 @@ class Blockchain:
     def pow(self, block, difficulty=3):
         proof_hash = block.hash()
         while not self.is_valid_proof(block, proof_hash, difficulty=difficulty):
-            block.proof += 1
+            block.nonce += 1
             proof_hash = block.hash()
         return proof_hash
 
