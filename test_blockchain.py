@@ -26,7 +26,8 @@ class TestBlockchain(unittest.TestCase):
         block = deepcopy(sample_block)
         block.previous_hash = blockchain.last_block.hash()
 
-        blockchain.add_block(block=block, proof_hash=blockchain.pow(block))
+        blockchain.verify_and_add_block(
+            block=block, proof_hash=blockchain.pow(block))
 
         self.assertEqual(blockchain.last_block.index, 1,
                          'Should retrieve last block successfully')
@@ -45,7 +46,7 @@ class TestBlockchain(unittest.TestCase):
         proof_hash = blockchain.pow(block)
         block.nonce += 1
         self.assertEqual(blockchain.is_valid_proof(block, proof_hash, DIFFICULTY), False,
-                         'Should apply PoW algorithm and failed due to wrong nonce counter')
+                         'Should apply PoW algorithm and fail due to wrong nonce counter')
 
     def test_is_valid_proof(self):
         blockchain = Blockchain()
@@ -65,14 +66,14 @@ class TestBlockchain(unittest.TestCase):
             'SenderAddress', 'ReceiverAddress', 10)
 
         self.assertEqual(blockchain.unconfirmed_txs, [],
-                         'Should return empty unconfirmed transaction array')
+                         'Should return an empty unconfirmed transaction array')
 
         blockchain.add_transaction(new_tx)
 
         self.assertEqual(blockchain.unconfirmed_txs, [
                          new_tx], 'Should return 1 unconfirmed transaction in array')
 
-    def test_add_block(self):
+    def test_verify_and_add_block(self):
         blockchain = Blockchain()
         block = deepcopy(sample_block)
         block.previous_hash = blockchain.last_block.hash()
@@ -82,13 +83,13 @@ class TestBlockchain(unittest.TestCase):
         self.assertEqual(blockchain.last_block.index, 0,
                          'Should return only genesis block before adding second block')
 
-        was_added = blockchain.add_block(block, proof_hash)
+        was_added = blockchain.verify_and_add_block(block, proof_hash)
 
         self.assertEqual(
             was_added, True, 'Should return true when add a valid block')
 
         self.assertEqual(blockchain.last_block.index, 1,
-                         'Should return only genesis block before adding second block')
+                         'Should return genesis block and the second block')
 
     def test_mine_with_unconfirmed_txs(self):
         blockchain = Blockchain()

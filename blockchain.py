@@ -19,20 +19,18 @@ class Blockchain:
             proof_hash = block.hash()
         return proof_hash
 
-    def add_block(self, block, proof_hash):
+    def verify_and_add_block(self, block, proof_hash):
         previous_hash = self.last_block.hash()
 
-        if previous_hash != block.previous_hash:
-            return False
-
-        if not self.is_valid_proof(block, proof_hash):
+        if previous_hash != block.previous_hash or not self.is_valid_proof(block, proof_hash):
             return False
 
         self._chain.append(block)
         return True
 
     def is_valid_proof(self, block, proof_hash, difficulty=3):
-        return block.hash().startswith('0' * difficulty) and block.hash() == proof_hash
+        computed_hash = block.hash()
+        return computed_hash.startswith('0' * difficulty) and computed_hash == proof_hash
 
     def add_transaction(self, transaction):
         self.unconfirmed_txs.append(transaction)
@@ -50,7 +48,7 @@ class Blockchain:
                           previous_hash=self.last_block.hash())
 
         proof_hash = self.pow(new_block)
-        self.add_block(new_block, proof_hash)
+        self.verify_and_add_block(new_block, proof_hash)
         self.unconfirmed_txs = []
         return new_block.index
 
